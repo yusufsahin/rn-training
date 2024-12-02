@@ -9,6 +9,16 @@
       "id": "ef26",
       "title": "task 2",
       "completed": true
+    },
+    {
+      "id": "b788",
+      "title": "task 2",
+      "completed": true
+    },
+    {
+      "id": "719b",
+      "title": "Task 3",
+      "completed": false
     }
   ]
 }
