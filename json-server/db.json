@@ -1,38 +1,14 @@
 {
   "todos": [
     {
-      "title": "enim quasi adipisci",
-      "id": "5"
-    },
-    {
-      "title": "qui ullam ration",
-      "id": "6"
-    },
-    {
-      "userId": 1,
-      "id": "7",
-      "title": "illo expedita consequatur quia in",
+      "id": "1c1f",
+      "title": "task 1",
       "completed": false
     },
     {
-      "userId": 1,
-      "id": "8",
-      "title": "quo adipisci enim quam ut ab",
+      "id": "ef26",
+      "title": "task 2",
       "completed": true
-    },
-    {
-      "title": "illo est ratione dolo",
-      "id": "10"
-    },
-    {
-      "id": "585b",
-      "title": "New Todo ",
-      "completed": false
-    },
-    {
-      "id": "c2d0",
-      "title": "nee todo 1",
-      "completed": false
     }
   ]
 }
