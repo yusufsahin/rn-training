@@ -1,0 +1,26 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "1234"
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "Hello World",
+      "author": "admin"
+    },
+    {
+      "title": "Hello World",
+      "author": "admin",
+      "id": 2
+    },
+    {
+      "title": "Hello World 3",
+      "author": "admin",
+      "id": 3
+    }
+  ]
+}

@@ -1,24 +1,3 @@
 {
-  "todos": [
-    {
-      "id": "1c1f",
-      "title": "task 1",
-      "completed": false
-    },
-    {
-      "id": "ef26",
-      "title": "task 2",
-      "completed": true
-    },
-    {
-      "id": "b788",
-      "title": "task 2",
-      "completed": true
-    },
-    {
-      "id": "719b",
-      "title": "Task 3",
-      "completed": false
-    }
-  ]
+  "todos": []
 }

@@ -1,0 +1,14 @@
+{
+  "name": "json-server-auth",
+  "version": "1.0.0",
+  "description": "A JSON Server with JWT-based authentication",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "jsonwebtoken": "^9.0.0",
+    "json-server": "^0.17.3"
+  }
+}
