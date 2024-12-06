@@ -10,5 +10,17 @@
       "title": "Task 2 update",
       "completed": false
     }
+  ],
+  "posts": [
+    {
+      "id": "bf7c",
+      "title": "Post 1 - Title",
+      "content": "Post 1 - Content Lorem Ipsum"
+    },
+    {
+      "title": "Test Title update",
+      "content": "Test Content update",
+      "id": "62c9"
+    }
   ]
 }
