@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { collection, getDocs,addDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc
+} from "firebase/firestore";
 import { db } from "../../app/api/firebase";
 
 const notesCollectionRef = collection(db, "notes");
@@ -26,8 +33,34 @@ export const addNote = createAsyncThunk(
   "notes/addNote",
   async (note, thunkAPI) => {
     try {
-      const docRef= await addDoc(notesCollectionRef, note);
-      return {id: docRef.id, ...note};
+      const docRef = await addDoc(notesCollectionRef, note);
+      return { id: docRef.id, ...note };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateNote = createAsyncThunk(
+  "notes/updateNote",
+  async ({ id, title }, thunkAPI) => {
+    try {
+      const noteDocRef = doc(db, "notes", id);
+      await updateDoc(noteDocRef, { title }); // Update only the title field
+      return { id, title }; // Return updated data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteNote = createAsyncThunk(
+  "notes/deleteNote",
+  async (noteId, thunkAPI) => {
+    try {
+      const noteDocRef = doc(db, "notes", noteId);
+      await deleteDoc(noteDocRef);
+      return noteId;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -62,6 +95,35 @@ const noteSlice = createSlice({
       state.notes.push(action.payload);
     });
     builder.addCase(addNote.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    });
+    builder.addCase(updateNote.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(updateNote.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      const index = state.notes.findIndex(
+        (note) => note.id === action.payload.id
+      );
+      if (index !== -1) {
+        // Replace the note at the found index
+        state.notes[index] = action.payload;
+      }
+    });
+
+    builder.addCase(updateNote.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    });
+    builder.addCase(deleteNote.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(deleteNote.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.notes = state.notes.filter((note) => note.id !== action.payload); // Remove the deleted note
+      });
+    builder.addCase(deleteNote.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.payload;
     });
