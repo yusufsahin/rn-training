@@ -11,56 +11,43 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTodos, createTodo, updateTodo, deleteTodo } from "./todoSlice";
-import { useForm, Controller } from "react-hook-form";
+import { Formik } from "formik";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import ControlledInput from "../../app/ui/ControlledInput";
 
 // Validation Schema
-const schema = yup.object({
+const validationSchema = yup.object({
   todoTitle: yup
     .string()
     .required("Title is required")
     .min(3, "Title must be at least 3 characters"),
 });
 
-const TodosScreen = () => {
+const Todos = () => {
   const dispatch = useDispatch();
   const { todos, loading, error } = useSelector((state) => state.todos);
 
   const [editingTodo, setEditingTodo] = useState(null);
 
-  const { control, handleSubmit, reset, setValue } = useForm({
-    resolver: yupResolver(schema),
-    defaultValues: { todoTitle: "" },
-  });
-
-  // Fetch todos on mount
   useEffect(() => {
     dispatch(fetchTodos());
   }, [dispatch]);
 
   // Add or Update Todo
-  const handleAddOrUpdateTodo = (data) => {
-    if (editingTodo) {
-      // Update existing todo
-      const updatedTodo = { ...editingTodo, title: data.todoTitle.trim() };
-      dispatch(updateTodo({ id: editingTodo.id, updatedTodo }))
-        .then(() => {
-          Alert.alert("Success", "Todo updated successfully");
-          setEditingTodo(null);
-          reset();
-        })
-        .catch(() => Alert.alert("Error", "Failed to update todo"));
-    } else {
-      // Add new todo
-      const newTodo = { title: data.todoTitle.trim(), completed: false };
-      dispatch(createTodo(newTodo))
-        .then(() => {
-          Alert.alert("Success", "Todo added successfully");
-          reset();
-        })
-        .catch(() => Alert.alert("Error", "Failed to add todo"));
+  const handleAddOrUpdateTodo = async (values, { resetForm }) => {
+    try {
+      if (editingTodo) {
+        const updatedTodo = { ...editingTodo, title: values.todoTitle.trim() };
+        await dispatch(updateTodo({ id: editingTodo.id, updatedTodo })).unwrap();
+        Alert.alert("Success", "Todo updated successfully");
+        setEditingTodo(null);
+      } else {
+        const newTodo = { title: values.todoTitle.trim(), completed: false };
+        await dispatch(createTodo(newTodo)).unwrap();
+        Alert.alert("Success", "Todo added successfully");
+      }
+      resetForm();
+    } catch (err) {
+      Alert.alert("Error", "Failed to save todo. Please try again.");
     }
   };
 
@@ -71,20 +58,26 @@ const TodosScreen = () => {
       {
         text: "Delete",
         style: "destructive",
-        onPress: () =>
-          dispatch(deleteTodo(id))
-            .then(() => Alert.alert("Success", "Todo deleted successfully"))
-            .catch(() => Alert.alert("Error", "Failed to delete todo")),
+        onPress: async () => {
+          try {
+            await dispatch(deleteTodo(id)).unwrap();
+            Alert.alert("Success", "Todo deleted successfully");
+          } catch {
+            Alert.alert("Error", "Failed to delete todo. Please try again.");
+          }
+        },
       },
     ]);
   };
 
   // Toggle Completion
-  const toggleCompletion = (todo) => {
-    const updatedTodo = { ...todo, completed: !todo.completed };
-    dispatch(updateTodo({ id: todo.id, updatedTodo }))
-      .then(() => console.log("Completion toggled"))
-      .catch(() => Alert.alert("Error", "Failed to toggle completion"));
+  const toggleCompletion = async (todo) => {
+    try {
+      const updatedTodo = { ...todo, completed: !todo.completed };
+      await dispatch(updateTodo({ id: todo.id, updatedTodo })).unwrap();
+    } catch {
+      Alert.alert("Error", "Failed to toggle completion.");
+    }
   };
 
   if (loading) {
@@ -107,27 +100,33 @@ const TodosScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Todos</Text>
 
-      {/* Add/Update Todo Form */}
-      <View style={styles.inputContainer}>
-        <ControlledInput
-          name="todoTitle"
-          control={control}
-          placeholder={editingTodo ? "Edit todo" : "Add a new todo"}
-          style={styles.input}
-          errorMessage={
-            // Pass validation error for this field
-            control.getFieldState("todoTitle", control._formState)?.error?.message
-          }
-        />
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={handleSubmit(handleAddOrUpdateTodo)}
-        >
-          <Text style={styles.addButtonText}>
-            {editingTodo ? "Update" : "Add"}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {/* Formik for Add/Update Todo */}
+      <Formik
+        initialValues={{ todoTitle: editingTodo ? editingTodo.title : "" }}
+        enableReinitialize
+        validationSchema={validationSchema}
+        onSubmit={handleAddOrUpdateTodo}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder={editingTodo ? "Edit todo" : "Add a new todo"}
+              value={values.todoTitle}
+              onChangeText={handleChange("todoTitle")}
+              onBlur={handleBlur("todoTitle")}
+            />
+            {touched.todoTitle && errors.todoTitle && (
+              <Text style={styles.errorText}>{errors.todoTitle}</Text>
+            )}
+            <TouchableOpacity style={styles.addButton} onPress={handleSubmit}>
+              <Text style={styles.addButtonText}>
+                {editingTodo ? "Update" : "Add"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Formik>
 
       {/* Todos List */}
       <FlatList
@@ -150,10 +149,7 @@ const TodosScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.editButton}
-                onPress={() => {
-                  setEditingTodo(item);
-                  setValue("todoTitle", item.title);
-                }}
+                onPress={() => setEditingTodo(item)}
               >
                 <Text>Edit</Text>
               </TouchableOpacity>
@@ -171,7 +167,7 @@ const TodosScreen = () => {
   );
 };
 
-export default TodosScreen;
+export default Todos;
 
 const styles = StyleSheet.create({
   container: {
@@ -191,7 +187,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#333",
   },
- 
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  input: {
+    flex: 1,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 10,
+    backgroundColor: "#fff",
+  },
   addButton: {
     backgroundColor: "#4CAF50",
     paddingVertical: 10,
@@ -235,5 +244,11 @@ const styles = StyleSheet.create({
   },
   deleteButtonText: {
     color: "red",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: -8,
+    marginBottom: 8,
   },
 });

@@ -6,8 +6,18 @@
       "completed": false
     },
     {
-      "id": "49e5",
-      "title": "Task 2 update",
+      "id": "ea35",
+      "title": "task 2",
+      "completed": true
+    },
+    {
+      "id": "abd6",
+      "title": "task 3 update",
+      "completed": true
+    },
+    {
+      "id": "ff32",
+      "title": "test",
       "completed": false
     }
   ],
