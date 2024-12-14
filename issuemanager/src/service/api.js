@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const axiosInstance = axios.create({
     baseURL: 'http://192.168.1.6:3000',
@@ -8,7 +9,13 @@ const axiosInstance = axios.create({
     }, 
 });
 axiosInstance.interceptors.request.use(
-    (config) => {
+    async (config) => {
+       
+
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }   
         console.log('Request was sent:', config);
         return config;
     },
@@ -24,6 +31,13 @@ axiosInstance.interceptors.response.use(
     },
     (error) => {
         console.log('Response error:', error);
+/*
+        if (error.response?.status === 401) {
+            // Optionally, clear the token and redirect to login
+            AsyncStorage.removeItem('token');
+            console.warn('Unauthorized - logging out');
+          }
+*/
         return Promise.reject(error);
     }
 );  

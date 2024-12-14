@@ -1,14 +1,81 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View,TouchableOpacity,TextInput} from 'react-native'
 import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
-const RegisterForm = () => {
+const RegisterForm = ({onSubmit}) => {
+
+  const { control, handleSubmit } = useForm();
+
   return (
-    <View>
-      <Text>RegisterForm</Text>
+    <View style={styles.container}>
+      <Controller 
+        name="username"
+        control={control}
+        defaultValue=""
+        render={({field: {onChange, value}}) => (
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            onChangeText={onChange}
+            value={value}
+          />
+        )}/>
+
+      <Controller
+        name="email"
+        control={control}
+        defaultValue=""
+        render={({field: {onChange, value}}) => (
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            onChangeText={onChange}
+            value={value}
+          />
+        )}/>
+      <Controller
+        name="password"
+        control={control}
+        defaultValue=""
+        render={({field: {onChange, value}}) => (
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={true}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}/>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
     </View>
   )
 }
 
 export default RegisterForm
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+  },
+  button: {
+    backgroundColor: '#6200EE',
+    paddingVertical: 12,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});

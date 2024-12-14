@@ -1,25 +1,51 @@
-import React from "react";
-import { Provider } from "react-redux";
+import { View, Text, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
 import { store } from "./src/redux/store";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./src/screens/LoginScreen";
-import RegisterScreen from "./src/screens/RegisterScreen";
-import HomeScreen from "./src/screens/HomeScreen";
+import AppNavigator from "./src/components/AppNavigator";
+import { Provider, useSelector, dispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { rehydrate } from "./src/redux/authSlice";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-const Stack = createStackNavigator();
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (token) {
+          store.dispatch(rehydrate({ token }));
+        }
+      } catch (error) {
+        console.log("App.js - useEffect - error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadToken();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
   );
 };
 
-export default App;
+export default () => (
+  <Provider store={store}>
+    <SafeAreaProvider>
+      <App />
+    </SafeAreaProvider>
+  </Provider>
+);

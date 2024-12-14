@@ -4,6 +4,46 @@
       "id": 1,
       "username": "admin",
       "password": "1234"
+    },
+    {
+      "username": "johndoe",
+      "email": "john@doe.com",
+      "password": "1234"
+    },
+    {
+      "username": "janedoe",
+      "email": "jane@doe.com",
+      "password": "1234"
+    },
+    {
+      "username": "suedoe",
+      "email": "sue@doe.com",
+      "password": "1234"
+    },
+    {
+      "username": "tomydoe",
+      "email": "tomy@doe.com",
+      "password": "1234"
+    },
+    {
+      "username": "johnydoe",
+      "email": "johny@doe.com",
+      "password": "1234"
+    },
+    {
+      "username": "test",
+      "email": "test@test.com",
+      "password": "test"
+    },
+    {
+      "username": "test1",
+      "email": "test1@test.com",
+      "password": "test1"
+    },
+    {
+      "username": "test2",
+      "email": "test2@test.com",
+      "password": "testt2"
     }
   ],
   "posts": [

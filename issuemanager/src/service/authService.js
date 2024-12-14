@@ -11,11 +11,10 @@ export const login = async (data) => {
   }
 }
 
-export const register = async (username, password) => {
-  try {
-    const response = await axiosInstance.post("/register", { username, password });
+export const register = async (data) => {
+    const { username, email, password } = data;
+ 
+    const response = await axiosInstance.post("/register", { username, email,password });
     return response.data;
-  } catch (error) {
-    throw error;
-  }
 }
+

@@ -9,7 +9,31 @@ server.use(middlewares);
 
 // Use body-parser for handling JSON requests
 server.use(jsonServer.bodyParser);
+server.post('/register', (req, res) => {
+  const { username, password,email } = req.body;
 
+  if (!username || !password || !email) {
+    return res.status(400).json({ message: 'Username and password are required' });
+  }
+
+  const db = router.db; // Access the lowdb instance
+  const userExists = db.get('users').find({ username }).value();
+  const emailExists = db.get('users').find({ email }).value();
+
+  if (userExists) {
+    return res.status(409).json({ message: 'User already exists' });
+  }
+  if (emailExists) {
+    return res.status(409).json({ message: 'Email already registered' });
+  }
+  // Add new user to the database
+  db.get('users')
+    .push({ username,email, password }) // In production, never store plaintext passwords
+    .write();
+
+  //const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+  res.status(201).json({ message: 'User created' });
+});
 // Login route (must be before auth middleware to bypass protection)
 server.post('/login', (req, res) => {
   const jwt = require('jsonwebtoken');

@@ -18,8 +18,12 @@ const authSlice = createSlice({
       state.token = null;
       AsyncStorage.removeItem('token');
     },
+    rehydrate: (state, action) => {
+      state.token = action.payload.token; // Restore token from AsyncStorage
+    },
+
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout ,rehydrate} = authSlice.actions;
 export default authSlice.reducer;

@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { use } from 'react'
+import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
+import React from 'react'
 import LoginForm from '../components/LoginForm'
 import { useDispatch } from 'react-redux'
 import { login } from '../service/authService'
 import { setCredentials } from '../redux/authSlice'
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
 
     const dispatch = useDispatch();
 
@@ -17,6 +17,7 @@ const LoginScreen = () => {
         dispatch(setCredentials(response));
         console.log(response);
         console.log('LoginScreen.js - handleLogin - data:', data);
+        navigation.navigate('Home');
         }catch(error){
             console.log('LoginScreen.js - handleLogin - error:', error);
         }
@@ -26,6 +27,12 @@ const LoginScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>LoginScreen</Text>
       <LoginForm onSubmit={handleLogin}/>
+      <View style={styles.linkContainer}>
+        <Text>Don't have an account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.linkText}> Register</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
@@ -44,6 +51,15 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       textAlign: 'center',
       marginBottom: 20,
+    },
+    linkContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: 20,
+    },
+    linkText: {
+      color: '#6200EE',
+      fontWeight: 'bold',
     },
   });
   
