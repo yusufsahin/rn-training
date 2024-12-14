@@ -16,6 +16,10 @@ const App = () => {
       try {
         const token = await AsyncStorage.getItem("token");
         if (token) {
+
+          console.log("----Rehydrating token----");
+          console.log(token)
+
           store.dispatch(rehydrate({ token }));
         }
       } catch (error) {
