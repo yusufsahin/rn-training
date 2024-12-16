@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 
 import AuthNavigator from "./AuthNavigator";
 import HomeScreen from "../screens/HomeScreen";
+import UpdateProjectScreen from "../screens/UpdateProjectScreen";
+import CreateProjectScreen from "../screens/CreateProjectScreen";
 
 
 const Stack = createStackNavigator();
@@ -16,11 +18,23 @@ const AppNavigator = () => {
   return (
     <Stack.Navigator>
       {token ? (
+        <>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="CreateProject"
+          component={CreateProjectScreen}
+          options={{ title: "Create Project" }}
+        />
+        <Stack.Screen
+          name="UpdateProject"
+          component={UpdateProjectScreen}
+          options={{ title: "Update Project" }}
+        />
+        </>
       ) : (
         <Stack.Screen
           name="Auth"
