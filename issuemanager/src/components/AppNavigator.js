@@ -8,7 +8,7 @@ import HomeScreen from "../screens/HomeScreen";
 import UpdateProjectScreen from "../screens/UpdateProjectScreen";
 import CreateProjectScreen from "../screens/CreateProjectScreen";
 import ProjectDetail from "../screens/ProjectDetail";
-import CreateWorkitem from "../screens/CreateWorkitem";
+import CreateWorkitemScreen from "../screens/CreateWorkitemScreen";
 
 const Stack = createStackNavigator();
 
@@ -37,7 +37,7 @@ const AppNavigator = () => {
         />
         <Stack.Screen name ="ProjectDetail" component={ProjectDetail}
           options={{ title: "Project Details" }}/>
-        <Stack.Screen name ="CreateWorkitem" component={CreateWorkitem}
+        <Stack.Screen name ="CreateWorkitem" component={CreateWorkitemScreen}
           options={{ title: "Create Workitem" }}/>
         </>
       ) : (

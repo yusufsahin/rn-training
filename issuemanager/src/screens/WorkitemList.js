@@ -48,8 +48,9 @@ const WorkitemList = ({ projectId }) => {
       renderItem={({ item }) => (
         <View style={styles.projectItem}>
           <View>
-            <Text style={styles.title}>{item.name}</Text>
-            <Text>Status: {item.assigneduser}</Text>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text>Assign To: {item.assignTo}</Text>
+            <Text>Status: {item.status}</Text>
           </View>
           <View style={styles.actions}>
             <TouchableOpacity
