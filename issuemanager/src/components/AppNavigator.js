@@ -7,7 +7,8 @@ import AuthNavigator from "./AuthNavigator";
 import HomeScreen from "../screens/HomeScreen";
 import UpdateProjectScreen from "../screens/UpdateProjectScreen";
 import CreateProjectScreen from "../screens/CreateProjectScreen";
-
+import ProjectDetail from "../screens/ProjectDetail";
+import CreateWorkitem from "../screens/CreateWorkitem";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,10 @@ const AppNavigator = () => {
           component={UpdateProjectScreen}
           options={{ title: "Update Project" }}
         />
+        <Stack.Screen name ="ProjectDetail" component={ProjectDetail}
+          options={{ title: "Project Details" }}/>
+        <Stack.Screen name ="CreateWorkitem" component={CreateWorkitem}
+          options={{ title: "Create Workitem" }}/>
         </>
       ) : (
         <Stack.Screen

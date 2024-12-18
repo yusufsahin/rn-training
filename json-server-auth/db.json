@@ -92,6 +92,25 @@
       "status": "active",
       "title": "Project 2",
       "id": 2
+    },
+    {
+      "project_manager": "John Doe",
+      "end_date": "2025-09-29T21:00:00.000Z",
+      "start_date": "2025-03-14T21:00:00.000Z",
+      "status": "initial",
+      "title": "Project 3",
+      "id": 3
+    }
+  ],
+  "workitems": [
+    {
+      "id": 1
+    },
+    {
+      "name": "workitem 1",
+      "assigneduser": "suedoe",
+      "projectId": 3,
+      "id": 2
     }
   ]
 }

@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../service/api";
 
 
+
 export const fetchProjects = createAsyncThunk("projects/fetchProjects", async () => {
     try {
         const response = await axiosInstance.get("/projects");
@@ -40,15 +41,20 @@ export const deleteProject = createAsyncThunk("projects/deleteProject", async (i
     }
 }
 );
-
+//changeProject action
 const projectSlice = createSlice({
     name: "projects",
     initialState: {
         projects: [],
+        currentProject: null,
         status: null,
         error: null,
     },
-    reducers: {},
+    reducers: {
+        setCurrentProject: (state, action) => {
+            state.currentProject = action.payload;
+        },
+    },
     extraReducers: (builder)=>{
         builder.addCase(fetchProjects.pending, (state) => {
             state.status = "loading";
@@ -98,7 +104,7 @@ const projectSlice = createSlice({
     
     },
 });
-
+export const { setCurrentProject } = projectSlice.actions;
 export default projectSlice.reducer;
 
 {/*

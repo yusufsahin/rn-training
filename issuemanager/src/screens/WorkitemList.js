@@ -8,35 +8,25 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchProjects,
-  deleteProject,
-  setCurrentProject,
-} from "../redux/projectSlice";
-import { useNavigation } from "@react-navigation/native";
 
-const ProjectList = ({ onEdit}) => {
+import { useNavigation } from "@react-navigation/native";
+import { fetchWorkitems,deleteWorkitem } from "../redux/workitemSlice";
+
+const WorkitemList = ({ projectId }) => {
   const dispatch = useDispatch();
-  const { projects, status, error } = useSelector((state) => state.projects);
-  const navigation= useNavigation();
+  const { workitems, status, error } = useSelector((state) => state.workitems);
+  const navigation = useNavigation();
   // Fetch projects on component mount
   useEffect(() => {
-    dispatch(fetchProjects());
+    dispatch(fetchWorkitems(projectId));
   }, [dispatch]);
 
   // Handle delete project
   const handleDelete = (id) => {
-    dispatch(deleteProject(id))
-      .unwrap()
-      .then(() => alert("Project deleted successfully!"))
+    dispatch(deleteWorkitem(id))
+      .unwrap() // Unwrap the promise
+      .then(() => alert("Workitem deleted successfully!"))
       .catch((err) => alert(`Error: ${err}`));
-  };
-
-  const handleProjectChange = (project) => {
-    console.log(project);
-
-    dispatch(setCurrentProject(project));
-    navigation.navigate('ProjectDetail');
   };
 
   if (status === "loading") {
@@ -47,34 +37,21 @@ const ProjectList = ({ onEdit}) => {
     return <Text style={styles.errorText}>Error: {error}</Text>;
   }
 
-  if (projects.length === 0) {
-    return <Text style={styles.emptyText}>No projects found!</Text>;
+  if (workitems.length === 0) {
+    return <Text style={styles.emptyText}>No workitem found!</Text>;
   }
 
   return (
     <FlatList
-      data={projects}
+      data={workitems}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <View style={styles.projectItem}>
           <View>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text>Status: {item.status}</Text>
-            <Text>Start: {item.start_date}</Text>
-            <Text>End: {item.end_date}</Text>
-            <Text>Manager: {item.project_manager}</Text>
+            <Text style={styles.title}>{item.name}</Text>
+            <Text>Status: {item.assigneduser}</Text>
           </View>
-         
           <View style={styles.actions}>
-          <TouchableOpacity  style={styles.selectButton} onPress={() => handleProjectChange(item)}>
-            <Text style={styles.buttonText}>View</Text>
-          </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => onEdit(item)}
-            >
-              <Text style={styles.buttonText}>Edit</Text>
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.deleteButton}
               onPress={() => handleDelete(item.id)}
@@ -143,4 +120,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProjectList;
+export default WorkitemList;
