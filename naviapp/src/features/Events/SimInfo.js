@@ -6,20 +6,32 @@ const SimInfo = () => {
   const [simInfo, setSimInfo] = useState(null);
   useEffect(() => {
     const fetchSimInfo = async () => {
-      // İzinleri kontrol et
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE
-      );
-
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        // SIM kart bilgilerini al
-        const info = SimData.getSimInfo();
-        setSimInfo(info);
-      } else {
-        console.warn("READ_PHONE_STATE izni reddedildi.");
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
+          {
+            title: "SIM Kart Bilgileri İzni",
+            message:
+              "Bu uygulama SIM kart bilgilerine erişmek için izninizi gerektirir.",
+            buttonNeutral: "Daha Sonra",
+            buttonNegative: "İptal",
+            buttonPositive: "Tamam",
+          }
+        );
+    
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // SIM kart bilgilerini al
+          const info = SimData.getSimInfo();
+          console.log("SIM Kart Bilgileri:", info);
+          setSimInfo(info);
+        } else {
+          console.warn("READ_PHONE_STATE izni reddedildi.");
+        }
+      } catch (err) {
+        console.error("İzin kontrol edilirken hata oluştu:", err);
       }
     };
-
+    
     fetchSimInfo();
 
   }, []); 
