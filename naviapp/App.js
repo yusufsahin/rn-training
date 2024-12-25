@@ -7,7 +7,7 @@ import MainStack from "./src/app/components/nav/MainStack";
 import LoginStack from "./src/app/components/nav/LoginStack";
 
 const RootNavigator = () => {
-   const  userauth = false;
+   const  userauth = true;
 
    //useEffect ile auth kontrolü yapılacak ve profile
 
